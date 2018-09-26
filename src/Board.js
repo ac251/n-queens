@@ -130,10 +130,10 @@
       if (col < 0) {
         row -= col;
         col = 0;
-      };
+      }
       for (; row < n && col < n; row++, col++) {
         count += arr[row][col];
-        if (count > 1) {return true;}
+        if (count > 1) { return true; }
       }
       return false;
     },
@@ -164,10 +164,10 @@
       if (col >= n) {
         row += col - n + 1;
         col = n - 1;
-      };
+      }
       for (; row < n && col >= 0; row++, col--) {
         count += arr[row][col];
-        if (count > 1) {return true;}
+        if (count > 1) { return true; }
       }
       return false;
     },
