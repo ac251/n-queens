@@ -82,14 +82,25 @@ window.findNQueensSolution = function(n) {
 window.countNQueensSolutions = function(n) {
   var solutionCount = 0;
   var board = new Board({n: n});
-  var boardChecker = function(board, rowsLeft = n) {
+  var boardChecker = function(board, rowsLeft = n, double = true) {
     if (rowsLeft === 0) {
-      solutionCount++;
+      double ? solutionCount += 2 : solutionCount++;
+    } else if (rowsLeft === n) {
+      for (var i = 0; i < Math.floor(n / 2); i++) {
+        board.togglePiece(n - rowsLeft, i);
+        boardChecker(board, rowsLeft - 1);
+        board.togglePiece(n - rowsLeft, i);
+      }
+      if (n % 2 === 1) {
+        board.togglePiece(n - rowsLeft, i);
+        boardChecker(board, rowsLeft - 1, false);
+        board.togglePiece(n - rowsLeft, i);
+      }
     } else {
       for (var i = 0; i < n; i++) {
         board.togglePiece(n - rowsLeft, i);
         if (!board.hasColOrDiagonalConflictsAt(n - rowsLeft, i)) {
-          boardChecker(board, rowsLeft - 1);
+          boardChecker(board, rowsLeft - 1, double);
         }
         board.togglePiece(n - rowsLeft, i);
       }
