@@ -58,7 +58,7 @@ window.findNQueensSolution = function(n) {
     }
     for (var i = 0; i < n; i++) {
       board.togglePiece(n - rowsLeft, i);
-      if (!board.hasAnyQueensConflicts()) {
+      if (!board.hasColOrDiagonalConflictsAt(n - rowsLeft, i)) {
         var shouldReturn = boardChecker(board, rowsLeft - 1);
         if (shouldReturn) {
           return shouldReturn;
@@ -88,7 +88,7 @@ window.countNQueensSolutions = function(n) {
     } else {
       for (var i = 0; i < n; i++) {
         board.togglePiece(n - rowsLeft, i);
-        if (!board.hasAnyQueensConflicts()) {
+        if (!board.hasColOrDiagonalConflictsAt(n - rowsLeft, i)) {
           boardChecker(board, rowsLeft - 1);
         }
         board.togglePiece(n - rowsLeft, i);

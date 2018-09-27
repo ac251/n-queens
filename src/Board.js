@@ -181,6 +181,10 @@
         }
       }
       return false; // fixme
+    },
+
+    hasColOrDiagonalConflictsAt: function(row, col) {
+      return this.hasColConflictAt(col) || this.hasMajorDiagonalConflictAt(col - row) || this.hasMinorDiagonalConflictAt(col + row);
     }
 
     /*--------------------  End of Helper Functions  ---------------------*/
