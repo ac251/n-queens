@@ -105,9 +105,9 @@
       // return count > 1;
       let n = this.get('n');
       let count = 0;
-      for(let row = 0; row < n; row++) {
+      for (let row = 0; row < n; row++) {
         count += this.get(row)[colIndex];
-        if(count > 1) { return true; }
+        if (count > 1) { return true; }
       }
       return false;
     },

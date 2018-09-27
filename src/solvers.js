@@ -105,7 +105,7 @@ window.countNQueensSolutions = function(n) {
         board.togglePiece(n - rowsLeft, i);
       }
     }
-  };
+  }; // time complexity: O(n ** n), or does dropping fruitless paths reduce it to O(n!)?
    
   boardChecker(board);
 
