@@ -80,35 +80,60 @@ window.findNQueensSolution = function(n) {
 
 // return the number of nxn chessboards that exist, with n queens placed such that none of them can attack each other
 window.countNQueensSolutions = function(n) {
-  var solutionCount = 0;
-  var board = new Board({n: n});
-  var boardChecker = function(board, rowsLeft = n, double = false) {
-    if (rowsLeft === 0) {
-      double ? solutionCount += 2 : solutionCount++;
-    } else if (rowsLeft === n) {
-      for (var i = 0; i < Math.floor(n / 2); i++) {
-        board.togglePiece(n - rowsLeft, i);
-        boardChecker(board, rowsLeft - 1, true);
-        board.togglePiece(n - rowsLeft, i);
-      }
-      if (n % 2 === 1) {
-        board.togglePiece(n - rowsLeft, i);
-        boardChecker(board, rowsLeft - 1, false);
-        board.togglePiece(n - rowsLeft, i);
-      }
-    } else {
-      for (var i = 0; i < n; i++) {
-        board.togglePiece(n - rowsLeft, i);
-        if (!board.hasColOrDiagonalConflictsAt(n - rowsLeft, i)) {
-          boardChecker(board, rowsLeft - 1, double);
-        }
-        board.togglePiece(n - rowsLeft, i);
-      }
-    }
-  }; // time complexity: O(n ** n), or does dropping fruitless paths reduce it to O(n!)?
+  // var solutionCount = 0;
+  // var board = new Board({n: n});
+  // var boardChecker = function(board, rowsLeft = n, double = false) {
+  //   if (rowsLeft === 0) {
+  //     double ? solutionCount += 2 : solutionCount++;
+  //   } else if (rowsLeft === n) {
+  //     for (var i = 0; i < Math.floor(n / 2); i++) {
+  //       board.togglePiece(n - rowsLeft, i);
+  //       boardChecker(board, rowsLeft - 1, true);
+  //       board.togglePiece(n - rowsLeft, i);
+  //     }
+  //     if (n % 2 === 1) {
+  //       board.togglePiece(n - rowsLeft, i);
+  //       boardChecker(board, rowsLeft - 1, false);
+  //       board.togglePiece(n - rowsLeft, i);
+  //     }
+  //   } else {
+  //     for (var i = 0; i < n; i++) {
+  //       board.togglePiece(n - rowsLeft, i);
+  //       if (!board.hasColOrDiagonalConflictsAt(n - rowsLeft, i)) {
+  //         boardChecker(board, rowsLeft - 1, double);
+  //       }
+  //       board.togglePiece(n - rowsLeft, i);
+  //     }
+  //   }
+  // }; // time complexity: O(n ** n), or does dropping fruitless paths reduce it to O(n!)?
    
-  boardChecker(board);
+  // boardChecker(board);
+  let solutionCount = window.countNQueensBitwiseStyle(n);
 
   console.log('Number of solutions for ' + n + ' queens:', solutionCount);
   return solutionCount;
+};
+
+window.countNQueensBitwiseStyle = function(n) {
+  var solutionCount = 0;
+  var bitwiseRecurser = function(rowsLeft = n, colMask = 0, majDiagMask = 0, minDiagMask = 0) {
+    if (rowsLeft === 0) {
+      solutionCount++;
+    } else {
+      let rowMask = colMask | majDiagMask >> (n - rowsLeft) | minDiagMask >> (rowsLeft - 1);
+      for (let i = 0; i < n; i++) {
+        let row = 2 ** i;
+        if ((row & rowMask) === 0) {
+          //debugger;
+          let newColMask = row | colMask;
+          let newMajDiagMask = row << (n - rowsLeft) | majDiagMask;
+          let newMinDiagMask = row << (rowsLeft - 1) | minDiagMask;
+          bitwiseRecurser(rowsLeft - 1, newColMask, newMajDiagMask, newMinDiagMask);
+        }
+      }
+    }
+  };
+  bitwiseRecurser();
+  return solutionCount;
+  
 };
