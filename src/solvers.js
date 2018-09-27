@@ -116,9 +116,25 @@ window.countNQueensSolutions = function(n) {
 
 window.countNQueensBitwiseStyle = function(n) {
   var solutionCount = 0;
-  var bitwiseRecurser = function(rowsLeft = n, colMask = 0, majDiagMask = 0, minDiagMask = 0) {
+  var bitwiseRecurser = function(rowsLeft = n, colMask = 0, majDiagMask = 0, minDiagMask = 0, double = false) {
     if (rowsLeft === 0) {
-      solutionCount++;
+      double ? solutionCount += 2 : solutionCount++;
+    } else if (rowsLeft === n) {
+      let i = 0;
+      for (; i < Math.floor(n / 2); i++) {
+        let row = 2 ** i;
+        let newColMask = row | colMask;
+        let newMajDiagMask = row << (n - rowsLeft);
+        let newMinDiagMask = row << (rowsLeft - 1);
+        bitwiseRecurser(rowsLeft - 1, newColMask, newMajDiagMask, newMinDiagMask, true);
+      }
+      if (n % 2 === 1) {
+        let row = 2 ** i;
+        let newColMask = row | colMask;
+        let newMajDiagMask = row << (n - rowsLeft);
+        let newMinDiagMask = row << (rowsLeft - 1);
+        bitwiseRecurser(rowsLeft - 1, newColMask, newMajDiagMask, newMinDiagMask, false);
+      }
     } else {
       let rowMask = colMask | majDiagMask >> (n - rowsLeft) | minDiagMask >> (rowsLeft - 1);
       for (let i = 0; i < n; i++) {
@@ -128,7 +144,7 @@ window.countNQueensBitwiseStyle = function(n) {
           let newColMask = row | colMask;
           let newMajDiagMask = row << (n - rowsLeft) | majDiagMask;
           let newMinDiagMask = row << (rowsLeft - 1) | minDiagMask;
-          bitwiseRecurser(rowsLeft - 1, newColMask, newMajDiagMask, newMinDiagMask);
+          bitwiseRecurser(rowsLeft - 1, newColMask, newMajDiagMask, newMinDiagMask, double);
         }
       }
     }
