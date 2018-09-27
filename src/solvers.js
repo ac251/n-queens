@@ -123,14 +123,14 @@ window.countNQueensBitwiseStyle = function(n) {
       let i = 0;
       for (; i < Math.floor(n / 2); i++) {
         let row = 2 ** i;
-        let newColMask = row | colMask;
+        let newColMask = row;
         let newMajDiagMask = row << (n - rowsLeft);
         let newMinDiagMask = row << (rowsLeft - 1);
         bitwiseRecurser(rowsLeft - 1, newColMask, newMajDiagMask, newMinDiagMask, true);
       }
       if (n % 2 === 1) {
         let row = 2 ** i;
-        let newColMask = row | colMask;
+        let newColMask = row;
         let newMajDiagMask = row << (n - rowsLeft);
         let newMinDiagMask = row << (rowsLeft - 1);
         bitwiseRecurser(rowsLeft - 1, newColMask, newMajDiagMask, newMinDiagMask, false);
@@ -140,7 +140,6 @@ window.countNQueensBitwiseStyle = function(n) {
       for (let i = 0; i < n; i++) {
         let row = 2 ** i;
         if ((row & rowMask) === 0) {
-          //debugger;
           let newColMask = row | colMask;
           let newMajDiagMask = row << (n - rowsLeft) | majDiagMask;
           let newMinDiagMask = row << (rowsLeft - 1) | minDiagMask;
