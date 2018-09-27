@@ -101,8 +101,15 @@
     //
     // test if a specific column on this board contains a conflict
     hasColConflictAt: function(colIndex) {
-      let count = this.rows().reduce((accum, row) => accum + row[colIndex], 0);
-      return count > 1; 
+      // let count = this.rows().reduce((accum, row) => accum + row[colIndex], 0);
+      // return count > 1;
+      let n = this.get('n');
+      let count = 0;
+      for(let row = 0; row < n; row++) {
+        count += this.get(row)[colIndex];
+        if(count > 1) { return true; }
+      }
+      return false;
     },
 
     // test if any columns on this board contain conflicts
@@ -126,13 +133,12 @@
       let col = majorDiagonalColumnIndexAtFirstRow;
       let n = this.get('n');
       let count = 0;
-      let arr = this.rows();
       if (col < 0) {
         row -= col;
         col = 0;
       }
       for (; row < n && col < n; row++, col++) {
-        count += arr[row][col];
+        count += this.get(row)[col];
         if (count > 1) { return true; }
       }
       return false;
@@ -160,13 +166,12 @@
       let col = minorDiagonalColumnIndexAtFirstRow;
       let n = this.get('n');
       let count = 0;
-      let arr = this.rows();
       if (col >= n) {
         row += col - n + 1;
         col = n - 1;
       }
       for (; row < n && col >= 0; row++, col--) {
-        count += arr[row][col];
+        count += this.get(row)[col];
         if (count > 1) { return true; }
       }
       return false;
