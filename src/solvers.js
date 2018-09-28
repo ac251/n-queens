@@ -108,13 +108,14 @@ window.countNQueensSolutions = function(n) {
   // }; // time complexity: O(n ** n), or does dropping fruitless paths reduce it to O(n!)?
    
   // boardChecker(board);
-  let solutionCount = window.countNQueensBitwiseStyle(n);
+  let solutionCount = window.countQueensBitwiseV2(n);
 
   console.log('Number of solutions for ' + n + ' queens:', solutionCount);
   return solutionCount;
 };
 
 window.countNQueensBitwiseStyle = function(n) {
+  // first attempt at bitwise, faster than using objects but slower than it could be, because of iteratively trying powers of 2
   var solutionCount = 0;
   var bitwiseRecurser = function(rowsLeft = n, colMask = 0, majDiagMask = 0, minDiagMask = 0, double = false) {
     if (rowsLeft === 0) {
@@ -151,4 +152,37 @@ window.countNQueensBitwiseStyle = function(n) {
   bitwiseRecurser();
   return solutionCount;
   
+};
+
+window.countQueensBitwiseV2 = function(n) {
+  // better bitwise, optimized for mirror symmetry in one dimension
+  var solutionCount = 0;
+  var all = 2 ** n - 1;
+  var half = 2 ** Math.floor(n / 2) - 1;
+  var middle = n % 2 === 1 ? 2 ** Math.floor(n / 2) : 0;
+  var recurser = function(col, majDiag, minDiag, double) {
+    if(col === all) {
+      double ? solutionCount += 2 : solutionCount++;
+    } else {
+      var potentialSpots = ~(col | majDiag | minDiag) & all;
+      while (potentialSpots) {
+      var bitToCheck = potentialSpots & -potentialSpots;
+      potentialSpots -= bitToCheck;
+      recurser(col | bitToCheck, (majDiag | bitToCheck) >> 1, (minDiag | bitToCheck) << 1, double);
+      }
+    }
+  };
+  var firstRowChecker = function() {
+    while (half) {
+      var bitToCheck = half & -half;
+      half -= bitToCheck;
+      recurser(bitToCheck, bitToCheck >> 1, bitToCheck << 1, true);
+    }
+    if (middle) {
+      recurser(middle, middle >> 1, middle << 1, false);
+    }
+  };
+  firstRowChecker();
+  if (n === 0) { return 1 };
+  return solutionCount;
 };
