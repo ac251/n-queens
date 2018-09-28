@@ -116,6 +116,7 @@ window.countNQueensSolutions = function(n) {
 
 window.countNQueensBitwiseStyle = function(n) {
   // first attempt at bitwise, faster than using objects but slower than it could be, because of iteratively trying powers of 2
+  // see below for better version
   var solutionCount = 0;
   var bitwiseRecurser = function(rowsLeft = n, colMask = 0, majDiagMask = 0, minDiagMask = 0, double = false) {
     if (rowsLeft === 0) {
